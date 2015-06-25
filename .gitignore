@@ -1,6 +1,9 @@
 .gradle
 build/
-
+**/.classpath
+**/.project
+**/.settings/
+**/.checkstyle
 # Ignore Gradle GUI config
 gradle-app.setting
 
