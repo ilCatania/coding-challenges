@@ -42,6 +42,10 @@ class NumberInWordsSpec extends Specification
         101 || 'one hundred one'
         113 || 'one hundred thirteen'
         174 || 'one hundred seventy-four'
-        388500611009L || 'three hundred eighty-eight billion five million six hundred eleven thousand nine'
+        7000L || 'seven thousand'
+        6000000L || 'six million'
+        2000000000L || 'two billion'
+        123456789L || 'one hundred twenty-three million four hundred fifty-six thousand seven hundred eighty-nine'
+        388500611003L || 'three hundred eighty-eight billion five hundred million six hundred eleven thousand three'
     }
 }
