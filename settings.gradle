@@ -1,1 +1,1 @@
-include 'number-in-words'
+include 'number-in-words', 'word-sorter'
