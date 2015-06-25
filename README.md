@@ -10,7 +10,7 @@ input: 22744
 output: twenty-two thousand seven hundred forty-four
 ```
 
-## Word length sorter
+## Word sorter
 given a text, it will output all words with their respective length, in
 decreasing order. For example:
 
