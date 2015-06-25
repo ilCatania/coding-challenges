@@ -26,7 +26,7 @@ class WordSorterSpec extends Specification
 
     def "test sorting words"()
     {
-        expect: WordSorter.sortWords(text) == sortedWords.collect({word-> "$word - ${wordlength()}"}).join('\n')
+        expect: WordSorter.sortWords(text) == sortedWords.collect({word-> "$word - ${word.length()}"}).join('\n')
 
         where:
         text || sortedWords
