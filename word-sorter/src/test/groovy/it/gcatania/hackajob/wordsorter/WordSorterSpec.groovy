@@ -30,6 +30,7 @@ class WordSorterSpec extends Specification
 
         where:
         text || sortedWords
+        '!"£$%' || []
         'se tu ci sei nel mio domani' || [
             'domani',
             'sei',
