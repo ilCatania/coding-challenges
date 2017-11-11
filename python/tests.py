@@ -49,8 +49,7 @@ class RandomGenTest(unittest.TestCase):
         pass
 
     def test_single_number(self):
-        # TODO implement
-        pass
+        self.run_test([3.14], [1])
 
     def test_simple_split(self):
         # TODO implement
