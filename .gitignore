@@ -6,4 +6,4 @@
 **/.idea/tasks.xml
 
 # python compiled files
-python/**/*.pyc
+*/python/**/*.pyc
