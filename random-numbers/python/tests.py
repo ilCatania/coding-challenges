@@ -26,12 +26,12 @@ class RandomGenTest(unittest.TestCase):
 
         # this tests the less pythonic version
         # rnd_gen = RandomGen(numbers, probabilities, self.SEED)
-        # counts = Counter([rnd_gen.next_num() for _ in range(
-        # self.ITERATIONS)])
+        # counts = Counter((rnd_gen.next_num() for _ in range(
+        # self.ITERATIONS)))
 
         # this tests the more pythonic version
         rnd_gen = random_numbers_gen(numbers, probabilities, seed=self.SEED)
-        counts = Counter([next(rnd_gen) for _ in range(self.ITERATIONS)])
+        counts = Counter((next(rnd_gen) for _ in range(self.ITERATIONS)))
 
         observed_probabilities =\
             {n: (c / self.ITERATIONS) for n,c in counts.items()}
