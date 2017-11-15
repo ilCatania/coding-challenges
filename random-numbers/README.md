@@ -58,3 +58,32 @@ public class RandomGen {
   }
 }
 ```
+
+# Solution
+
+The python based solutions can be found under the `python` subfolder. They
+are made up of:
+
+1. `random_numbers.py`: a basic implementation following the above
+template
+2. `random_numbers_pythonic.py`: a more pythonic implementation
+3. `tests.py`: a test suite for the above (it tests the pythonic
+version by default but this can be toggled by uncommenting the relevant
+lines)
+
+The tests can be run from the command line with any python 3
+interpreter, for example:
+
+```bash
+python3 -m unittest
+```
+
+and the expected output would be something like this:
+
+```
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.037s
+
+OK
+```
