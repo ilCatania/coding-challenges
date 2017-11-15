@@ -1,0 +1,10 @@
+apply plugin: 'groovy'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+  testRuntime "com.h2database:h2:1.4.196"
+}
