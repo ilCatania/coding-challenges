@@ -29,6 +29,8 @@ class RandomGen(object):
             raise ValueError("Probabilities: {} should add to 1, not {}!"
                              .format(probabilities, fsum(probabilities)))
         self._random_nums = numbers
+        # TODO for better performance we should probably store the
+        # cumulative probabilites directly
         self._probabilities = probabilities
         self._rnd.seed(seed)
 

@@ -13,10 +13,6 @@ class RandomGenTest(unittest.TestCase):
     # static seed value to get repeatable test results
     SEED = 42
 
-    def setUp(self):
-        # TODO might actually not be needed
-        pass
-
     def run_test(self, numbers, probabilities):
         """
         sets up a random generator with the provided arguments,
