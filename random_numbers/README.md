@@ -87,3 +87,11 @@ Ran 7 tests in 0.037s
 
 OK
 ```
+
+The java based solution can be found under the `java` subfolder, and it
+can be built and tested with gradle. Once built, it can also be run from
+the command line, for example:
+
+```bash
+java -jar build/libs/random_numbers.jar 4,12,2 .4,.4,.2
+```
