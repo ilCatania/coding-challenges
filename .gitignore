@@ -3,8 +3,9 @@
 **/*.iml
 **/out/
 
-# python compiled files
-*/python/**/*.pyc
+# python compiled files and coverage cache
+**/python/**/*.pyc
+**/python/.coverage
 
 # gradle build
 .gradle/

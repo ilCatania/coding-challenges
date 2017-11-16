@@ -59,10 +59,12 @@ public class RandomGen {
 }
 ```
 
-# Solution
+# Solutions
 
-The python based solutions can be found under the `python` subfolder. They
-are made up of:
+## Python
+
+The python based solutions can be found under the `python` subfolder.
+They are made up of:
 
 1. `random_numbers.py`: a basic implementation following the above
 template
@@ -88,10 +90,17 @@ Ran 7 tests in 0.037s
 OK
 ```
 
-The java based solution can be found under the `java` subfolder, and it
+Code coverage can be run with `coverage.py`, provided it has been
+installed.
+
+## Java
+
+The Java based solution can be found under the `java` subfolder, and it
 can be built and tested with gradle. Once built, it can also be run from
 the command line, for example:
 
 ```bash
 java -jar build/libs/random_numbers.jar 4,12,2 .4,.4,.2
 ```
+
+Code coverage can be run with the `jacocoTestReport` gradle task.
