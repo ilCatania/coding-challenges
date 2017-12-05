@@ -1,6 +1,7 @@
 from random import Random
 from math import fsum
 from itertools import accumulate
+from bisect import bisect_left
 
 
 def random_numbers_gen(numbers, probabilities, seed=None):
@@ -17,7 +18,8 @@ def random_numbers_gen(numbers, probabilities, seed=None):
                          .format(probabilities, fsum(probabilities)))
     rnd = Random()
     rnd.seed(seed)
+    cumulatives = list(accumulate(probabilities))
     while True:
         roll = rnd.random()
-        yield next((numbers[index] for index, cumulative in enumerate(
-            accumulate(probabilities)) if roll < cumulative))
+        i = bisect_left(cumulatives, roll)
+        yield numbers[i]

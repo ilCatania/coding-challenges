@@ -7,14 +7,13 @@ import java.util.stream.DoubleStream;
 public class RandomGen {
     // Values that may be returned by nextNum()
     private final int[] randomNums;
-    // Probability of the occurence of randomNums
-    private final double[] probabilities;
+    // Cumulative probabilities of the occurences of randomNums
+    private final double[] cumulatives;
     private final Random random;
 
 
     public RandomGen(int[] randomNums, double[] probabilities, long seed) {
         this.randomNums = randomNums;
-        this.probabilities = probabilities;
         if(1 != DoubleStream.of(probabilities).sum()) {
             throw new IllegalArgumentException("Probabilities don't add to 1!");
         }
@@ -23,6 +22,12 @@ public class RandomGen {
                     "Length mismatch between numbers and probabilities!");
         }
         random = new Random(seed);
+        cumulatives = new double[probabilities.length];
+        double cumulative = 0d;
+        for(int i = 0; i < probabilities.length; i++) {
+            cumulative += probabilities[i];
+            cumulatives[i] = cumulative;
+        }
     }
 
     public RandomGen(int[] randomNums, double[] probabilities) {
@@ -36,12 +41,8 @@ public class RandomGen {
      */
     public int nextNum() {
         double roll = random.nextDouble();
-        double cumulative = 0d;
-        for(int i = 0; i < probabilities.length; i++) {
-            cumulative += probabilities[i];
-            if(roll < cumulative) return randomNums[i];
-        }
-        throw new InternalError("this is a bug!");
+        int found = Arrays.binarySearch(cumulatives, roll);
+        return randomNums[-found-1];
     }
 
     public static void main(String[] args) {
