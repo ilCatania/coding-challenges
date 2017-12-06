@@ -1,39 +1,10 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-    }
+plugins {
+    id "com.github.hierynomus.license" version "0.14.0"
 }
 
 subprojects {
-    apply plugin: 'groovy'
-    apply plugin: 'eclipse-wtp'
     apply plugin: 'license'
-    apply plugin: 'jacoco'
 
-    repositories {
-        mavenCentral()
-    }
-
-    ext.sharedLibs = [
-        logback: 'ch.qos.logback:logback-classic:1.1.3'
-    ]
-
-    dependencies {
-        compile 'org.codehaus.groovy:groovy-all:2.4.3'
-        compile 'ch.qos.logback:logback-classic:1.1.3'
-        testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    }
-
-    version = '1.0'
-
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
-    
     license {
         header rootProject.file('src/main/etc/header.txt')
         strictCheck true
