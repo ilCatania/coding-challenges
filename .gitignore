@@ -10,3 +10,9 @@
 # gradle build
 .gradle/
 build/
+
+# eclipse generated files
+**/.classpath
+**/.project
+**/.settings/
+**/.checkstyle
