@@ -1,1 +1,1 @@
-include 'book_sales', 'random_numbers:java', 'exchange', 'number-in-words', 'word-sorter'
+include 'book_sales', 'random_numbers:java', 'exchange', 'number_in_words', 'word_sorter'
