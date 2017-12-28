@@ -3,9 +3,13 @@
 **/*.iml
 **/out/
 
-# python compiled files and coverage cache
+# python compiled files and caches
 **/python/**/*.pyc
 **/python/.coverage
+**/__pycache__/
+
+# python virtual envs
+**/venv/
 
 # gradle build
 .gradle/
