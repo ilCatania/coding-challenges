@@ -1,0 +1,12 @@
+# idea generated files
+**/.idea/
+**/*.iml
+**/out/
+
+# python compiled files and coverage cache
+**/*.pyc
+**/.coverage
+**/__pycache__
+
+# python virtual env
+venv
