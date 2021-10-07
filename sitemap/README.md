@@ -1,4 +1,4 @@
-Site map grap generator
+Site map graph generator
 =======================
 
 Crawls a website and produces a network graph of its links.
