@@ -1,5 +1,9 @@
+/*
+license plugin does not work in gradle 7.x: https://github.com/hierynomus/license-gradle-plugin/issues/179
+
+distributionUrl=https\://services.gradle.org/distributions/gradle-6.9.2-bin.zip
 plugins {
-    id "com.github.hierynomus.license" version "0.14.0"
+    id "com.github.hierynomus.license" version "0.15.0"
 }
 
 subprojects {
@@ -8,9 +12,10 @@ subprojects {
     license {
         header rootProject.file('src/main/etc/header.txt')
         strictCheck true
-        excludes(['**/*.txt', '**/logback.xml', '**/*.properties'])
+        excludes(['** /*.txt', '** /logback.xml', '** /*.properties'])
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
         ext.owner = 'Gabriele Catania'
         ext.email = 'gabriele.ctn@gmail.com'
     }
 }
+*/
