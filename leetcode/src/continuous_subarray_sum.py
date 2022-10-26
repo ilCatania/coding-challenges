@@ -11,11 +11,23 @@ from typing import List
 
 
 class Solution:
-    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+    def checkSubarraySumSlowButReadable(self, nums: List[int], k: int) -> bool:
         for i in range(len(nums)):
             for j in range(i + 2, len(nums) + 1):
                 if not (sum(nums[i:j]) % k):
                     return True
+        return False
+
+    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+        m = {0: 0}
+        s = 0
+        for i in range(len(nums)):
+            s += nums[i]
+            rem = s % k
+            if rem not in m:
+                m[rem] = i + 1
+            elif m[rem] < i:
+                return True
         return False
 
 
