@@ -20,7 +20,6 @@ import java.util.List;
 
 public class Position {
 
-    private final String instrument = "GOLD";
     private int quantity = 0;
     public final double price;
     private final List<Order> orders = new ArrayList<>();

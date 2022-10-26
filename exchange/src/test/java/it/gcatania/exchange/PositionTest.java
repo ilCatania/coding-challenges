@@ -15,9 +15,6 @@
  */
 package it.gcatania.exchange;
 
-import org.junit.*;
-
-
 public class PositionTest {
 
     // TODO implement check and enable test
@@ -28,7 +25,5 @@ public class PositionTest {
 
         p.add(o);
     }
-
-
 
 }

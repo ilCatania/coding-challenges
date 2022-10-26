@@ -30,7 +30,6 @@ public class RandomGenTest {
     private static final double DELTA = .001;
     private static final int SEED = 42;
 
-
     private static void runTest(int[] numbers, double[] probabilities) {
         RandomGen randomGen = new RandomGen(numbers, probabilities, SEED);
 
@@ -58,44 +57,43 @@ public class RandomGenTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void tooManyProbabilities() {
-        int[] numbers = {3, 2};
-        double[] probabilities = {.5, .3, .2};
+        int[] numbers = { 3, 2 };
+        double[] probabilities = { .5, .3, .2 };
         runTest(numbers, probabilities);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void tooFewProbabilities() {
-        int[] numbers = {3, 2, 1};
-        double[] probabilities = {.7, .3};
+        int[] numbers = { 3, 2, 1 };
+        double[] probabilities = { .7, .3 };
         runTest(numbers, probabilities);
     }
 
     @Test(expected = NullPointerException.class)
     public void missingArguments() {
-        int[] numbers = {3, 2, 1};
-        double[] probabilities = {.5, .3, .2};
+        double[] probabilities = { .5, .3, .2 };
         runTest(null, probabilities);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void probabilitiesDontAddToOne() {
-        int[] numbers = {3, 2, 1};
-        double[] probabilities = {.5, .3, .1};
+        int[] numbers = { 3, 2, 1 };
+        double[] probabilities = { .5, .3, .1 };
         runTest(numbers, probabilities);
     }
 
     @Test
     public void singleNumber() {
-        runTest(new int[]{3}, new double[]{1});
+        runTest(new int[] { 3 }, new double[] { 1 });
     }
 
     @Test
     public void simpleSplit() {
-        runTest(new int[]{3, 4}, new double[]{.5, .5});
+        runTest(new int[] { 3, 4 }, new double[] { .5, .5 });
     }
 
     @Test
     public void nonTrivialCase() {
-        runTest(new int[] {-1, 0, 1, 2, 3}, new double[] {.01, .3, .58, .1, .01});
+        runTest(new int[] { -1, 0, 1, 2, 3 }, new double[] { .01, .3, .58, .1, .01 });
     }
 }
