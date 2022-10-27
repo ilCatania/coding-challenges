@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leetcode"
+description = "Leetcode challenges"
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["leetcode"]
+license = {text = "APACHE 2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+]
+dynamic = ["version"]
+
+[tool.setuptools_scm]
+root = ".."
