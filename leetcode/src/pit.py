@@ -1,7 +1,7 @@
 """
 Find the maximum pit depth in an array of integers.
 """
-from typing import List
+from typing import List, Optional
 
 
 def pit_depth(start, bottom, end):
@@ -9,44 +9,48 @@ def pit_depth(start, bottom, end):
     return min(start - bottom, end - bottom)
 
 
+def get_state(curr: int, next: int) -> Optional[str]:
+    if next < curr:
+        return "down"
+    elif next > curr:
+        return "up"
+    else:
+        return None
+
+
 def solution(A: List[int]) -> int:
     max_depth = -1
-    state = None
     if not A:
         return max_depth
-    prev = A[0]
-    last_top = prev
-    last_bottom = None
-    for curr in A[1:]:
-        if curr < prev:
-            next_state = "down"
-        elif curr > prev:
-            next_state = "up"
-        else:
-            next_state = None
-        if (
-            state == "up"
-            and next_state != "up"
-            and last_top is not None
-            and last_bottom is not None
-        ):
-            # prev ends a pit
-            curr_depth = pit_depth(last_top, last_bottom, prev)
-            max_depth = max(max_depth, curr_depth)
-        if state != "down" and next_state == "down":
-            # we were at the top
-            last_top = prev
-        elif state == "down" and next_state == "up":
-            # we were at the bottom
-            last_bottom = prev
-        state = next_state
-        prev = curr
+    curr = A[0]
+    top = curr
+    bottom = None
+    curr_state = None
+    for next in A[1:]:
+        next_state = get_state(curr, next)
 
-    if state == "up" and last_top is not None and last_bottom is not None:
+        if (
+            curr_state == "up"
+            and next_state != "up"
+            and top is not None
+            and bottom is not None
+        ):
+            # we're at the end of a pit
+            curr_depth = pit_depth(top, bottom, curr)
+            max_depth = max(max_depth, curr_depth)
+        if curr_state != "down" and next_state == "down":
+            # we're at the top
+            top = curr
+        elif curr_state == "down" and next_state == "up":
+            # we're at the bottom
+            bottom = curr
+        curr_state = next_state
+        curr = next
+
+    if curr_state == "up" and top is not None and bottom is not None:
         # pit at the end
-        curr_depth = pit_depth(last_top, last_bottom, prev)
+        curr_depth = pit_depth(top, bottom, curr)
         max_depth = max(max_depth, curr_depth)
-    print(f"Input: {A}, solution: {max_depth}")
     return max_depth
 
 
