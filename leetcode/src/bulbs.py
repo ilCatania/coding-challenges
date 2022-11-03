@@ -12,20 +12,11 @@ from typing import List, Optional
 def solution(A: List[int]) -> int:
     if not A:
         return 0
-    switches = [False] * len(A)
-    bulbs = [False] * len(A)
     moments = 0
-    for k_ in A:
-        k = k_ - 1  # A is 1-based
-        switches[k] = True
-        if k == 0 or bulbs[k - 1]:
-            bulbs[k] = True
-            for n in range(k + 1, len(A)):
-                if switches[n]:
-                    bulbs[n] = True
-                else:
-                    break
-        if switches == bulbs:
+    rightmost_on_switch = 0
+    for i, k in enumerate(A):
+        rightmost_on_switch = max(rightmost_on_switch, k)
+        if rightmost_on_switch == i + 1:  # positions in A are 1-based
             moments += 1
     return moments
 
