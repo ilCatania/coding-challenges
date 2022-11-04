@@ -36,3 +36,6 @@ jobs:
         for s in leetcode/src/*.py ; do
           python $s
         done
+        for s in assorted_python_problems/src/*.py ; do
+          python $s
+        done
