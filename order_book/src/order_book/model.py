@@ -92,3 +92,105 @@ class OrderFill:
                 f"Invalid fill price {fill_price} for {self.order}!"
             )
         self.fills.append(Fill(timestamp, fill_qty, fill_price))
+
+
+@dataclass
+class OrderBookEntry:
+    """An entry into the order book.
+
+    An entry is comprised of orders with the same price level and direction
+    (buy/sell), and their fills information for partially filled orders.
+    """
+
+    price: float
+    is_buy: bool
+    open_orders: List[OrderFill] = field(default_factory=list)
+
+    @staticmethod
+    def from_order(o: Order) -> "OrderBookEntry":
+        """Create an order book entry from a single order."""
+        return OrderBookEntry(
+            price=o.price, is_buy=o.is_buy, open_orders=[OrderFill(order=o)]
+        )
+
+    def __bool__(self):
+        """Return true if this entry has any open orders."""
+        return bool(self.open_orders)
+
+    def __iter__(self):
+        """Iterate over open orders."""
+        return iter(self.open_orders)
+
+    def append(self, o: OrderFill):
+        """Add an order to this entry."""
+        if o.order.price == self.price and o.order.is_buy == self.is_buy:
+            self.open_orders.append(o)
+        else:
+            raise ValueError(
+                f"Can't add {o} to entry with "
+                "price: {self.price}, buy: {self.is_buy}!"
+            )
+
+    def match_against(self, incoming_order: OrderFill) -> List[OrderFill]:
+        """Receive an order and match it with open orders.
+
+        Modify the input order to match it with any fills, and return any orders
+        that were fully filled by this order.
+        """
+        if self.is_buy == incoming_order.order.is_buy:
+            raise ValueError(
+                "Can't match order in the same direction:"
+                f"\n{incoming_order}\n{self}"
+            )
+        incoming_price = incoming_order.order.price
+        if incoming_order.order.is_buy and incoming_price < self.price:
+            raise ValueError(
+                f"Can't match buy order with price {incoming_price}, "
+                f"entry limit price is {self.price}!"
+            )
+        elif not incoming_order.order.is_buy and incoming_price > self.price:
+            raise ValueError(
+                f"Can't match sell order with price {incoming_price}, "
+                f"entry limit price is {self.price}!"
+            )
+        incoming_ts = incoming_order.order.timestamp
+        filled_orders = []
+        qty_to_fill = incoming_order.open_qty
+        for oo in self.open_orders:
+            fill_qty = min(qty_to_fill, oo.open_qty)
+            oo.register_fill(incoming_ts, fill_qty, self.price)
+            if oo.status == OrderFillStatus.FILLED:
+                filled_orders.append(oo)
+            qty_to_fill -= fill_qty
+            if not qty_to_fill:
+                break
+        self.open_orders = [
+            o for o in self.open_orders if o.status != OrderFillStatus.FILLED
+        ]
+        incoming_filled_qty = incoming_order.open_qty - qty_to_fill
+        # register a single fill on the upcoming order even if it was matched
+        # against multiple orders
+        incoming_order.register_fill(
+            incoming_ts,
+            incoming_filled_qty,
+            self.price,
+        )
+        return filled_orders
+
+
+class OrderBook:
+    """An order book."""
+
+    def __init__(self) -> None:
+        self.buy_orders: List[OrderBookEntry] = []
+        self.sell_orders: List[OrderBookEntry] = []
+
+    def receive(self, order: Order):
+        """Receive an order and try to match it with existing orders.
+
+        Record the order in the order book unless it's fully filled.
+        """
+        if order.is_buy:
+            pass
+        else:
+            pass
