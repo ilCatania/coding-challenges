@@ -34,7 +34,6 @@ class OrderFillStatus(Enum):
 class OrderFill:
     order: Order
     fills: List[Fill] = field(default_factory=list)
-    status: OrderFillStatus = OrderFillStatus.NONE
 
     @property
     def fill_qty(self) -> float:
@@ -51,6 +50,16 @@ class OrderFill:
         """Return the average fill price."""
         return sum(f.qty * f.price for f in self.fills) / self.fill_qty
 
+    @property
+    def status(self) -> OrderFillStatus:
+        f = self.fill_qty
+        if f == self.order.qty:
+            return OrderFillStatus.FILLED
+        elif f:
+            return OrderFillStatus.PARTIALLY_FILLED
+        else:
+            return OrderFillStatus.NONE
+
     def register_fill(
         self, timestamp: datetime, fill_qty: float, fill_price: float
     ) -> None:
@@ -65,12 +74,8 @@ class OrderFill:
         if fill_qty > open_qty:
             raise ValueError(
                 f"Invalid fill quantity {fill_qty} "
-                "for order with open quantity {self.open_qty}!"
+                f"for order with open quantity {self.open_qty}!"
             )
-        elif fill_qty == open_qty:
-            new_status = OrderFillStatus.FILLED
-        else:
-            new_status = OrderFillStatus.PARTIALLY_FILLED
         # check that the fill price is compatible with the order's limit price
         if self.order.is_buy:
             fill_price_ok = fill_price <= self.order.price
@@ -79,4 +84,3 @@ class OrderFill:
         if not fill_price_ok:
             raise ValueError(f"Invalid fill price {fill_price} for {self.order}!")
         self.fills.append(Fill(timestamp, fill_qty, fill_price))
-        self.status = new_status
