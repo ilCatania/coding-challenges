@@ -1,12 +1,18 @@
 from datetime import datetime, timezone
-from order_book.model import Order, OrderFill, OrderFillStatus
+
 import pytest
+
+from order_book.model import Order, OrderFill, OrderFillStatus
 
 
 @pytest.fixture
 def fake_order() -> Order:
     return Order(
-        "VOD.L", datetime(2022, 3, 2, 11, 33, 12, 55, timezone.utc), True, 120, 46.3
+        "VOD.L",
+        datetime(2022, 3, 2, 11, 33, 12, 55, timezone.utc),
+        True,
+        120,
+        46.3,
     )
 
 

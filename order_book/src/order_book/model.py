@@ -1,8 +1,10 @@
 """Order book data model objects."""
+import operator
+from bisect import bisect_left
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import List
+from typing import List, Union
 
 
 @dataclass(frozen=True)
@@ -117,11 +119,15 @@ class OrderBookEntry:
     open_orders: List[OrderFill] = field(default_factory=list)
 
     @staticmethod
-    def from_order(o: Order) -> "OrderBookEntry":
+    def from_order(o: Union[Order, OrderFill]) -> "OrderBookEntry":
         """Create an order book entry from a single order."""
-        return OrderBookEntry(
-            price=o.price, is_buy=o.is_buy, open_orders=[OrderFill(order=o)]
-        )
+        if isinstance(o, OrderFill):
+            of = o
+        elif isinstance(o, Order):
+            of = OrderFill(order=o)
+        else:
+            raise ValueError(f"Invalid input: {o}!")
+        return OrderBookEntry(price=o.price, is_buy=o.is_buy, open_orders=[of])
 
     def __bool__(self):
         """Return true if this entry has any open orders."""
@@ -132,7 +138,12 @@ class OrderBookEntry:
         return iter(self.open_orders)
 
     def __cmp__(self, other) -> int:
-        """Provide ordering."""
+        """Provide ordering.
+
+        Order book entries are considered to be ordered descending with respect
+        to price on the sell side, and ascending on the buy side, so they can be
+        more efficiently matched against incoming orders from the opposite side.
+        """
         type_ok = (
             isinstance(other, OrderBookEntry)
             or isinstance(other, OrderFill)
@@ -207,7 +218,7 @@ class OrderBookEntry:
             qty_to_fill -= fill_qty
             if not qty_to_fill:
                 break
-        self.open_orders = [
+        self.open_orders[:] = [
             o for o in self.open_orders if o.status != OrderFillStatus.FILLED
         ]
         incoming_filled_qty = incoming_order.open_qty - qty_to_fill
@@ -226,14 +237,63 @@ class OrderBook:
 
     def __init__(self) -> None:
         self.buy_orders: List[OrderBookEntry] = []
+        """The buy orders, kept in descending order of price."""
         self.sell_orders: List[OrderBookEntry] = []
+        """The sell orders, kept in ascending order of price."""
 
-    def receive(self, order: Order):
+    def __repr__(self):
+        """Return the string representation."""
+        return (
+            f"{type(self).__name__}(buy_orders={self.buy_orders},"
+            "sell_orders={self.sell_orders})"
+        )
+
+    def append(self, order: OrderFill):
+        """Append an order to this order book.
+
+        This just adds the order to the order book, without trying to match any
+        existing orders. It creates an order book entry if needed.
+        """
+        to_append = self.buy_orders if order.is_buy else self.sell_orders
+        idx = bisect_left(to_append, order)
+        if idx < len(to_append):
+            entry = to_append[idx]
+            if entry.price == order.price:
+                # append order to existing entry
+                entry.append(order)
+                return
+        # insert new order book entry
+        to_append.insert(idx, OrderBookEntry.from_order(order))
+
+    def receive(self, order: Order) -> List[OrderFill]:
         """Receive an order and try to match it with existing orders.
 
-        Record the order in the order book unless it's fully filled.
+        Record the order in the order book unless it's fully filled, and return
+        all the orders that have been filled and removed from the order book,
+        including the input order if it was fully filled.
         """
+        of = OrderFill(order=order)
         if order.is_buy:
-            pass
+            orders_to_match = self.sell_orders
+            cannot_match = operator.lt
         else:
-            pass
+            orders_to_match = self.buy_orders
+            cannot_match = operator.gt
+
+        filled_orders = []
+        for obe in orders_to_match:
+            if (
+                cannot_match(order.price, obe.price)
+                or of.status == OrderFillStatus.FILLED
+            ):
+                break
+            filled = obe.match_against(of)
+            filled_orders.extend(filled)
+        if of.status == OrderFillStatus.FILLED:
+            filled_orders.append(of)
+        else:
+            self.append(of)
+
+        # remove entries with no orders from the book
+        orders_to_match[:] = [o for o in orders_to_match if o]
+        return filled_orders
