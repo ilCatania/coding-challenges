@@ -35,4 +35,4 @@ root = ".."
 profile = "black"
 
 [tool.black]
-line-length = 88
+line-length = 80
