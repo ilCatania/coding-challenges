@@ -41,6 +41,16 @@ class OrderFill:
     fills: List[Fill] = field(default_factory=list)
 
     @property
+    def price(self) -> float:
+        """Return the order price."""
+        return self.order.price
+
+    @property
+    def is_buy(self) -> bool:
+        """Return the order buy flag."""
+        return self.order.is_buy
+
+    @property
     def fill_qty(self) -> float:
         """Return the current fill quantity."""
         return sum(f.qty for f in self.fills) if self.fills else 0
@@ -123,7 +133,12 @@ class OrderBookEntry:
 
     def __cmp__(self, other) -> int:
         """Provide ordering."""
-        if isinstance(other, OrderBookEntry) and self.is_buy == other.is_buy:
+        type_ok = (
+            isinstance(other, OrderBookEntry)
+            or isinstance(other, OrderFill)
+            or isinstance(other, Order)
+        )
+        if type_ok and self.is_buy == other.is_buy:
             if self.price == other.price:
                 return 0
             if self.is_buy:

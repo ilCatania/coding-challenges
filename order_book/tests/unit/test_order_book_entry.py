@@ -68,12 +68,18 @@ def test_order_book_entry_ordering():
     assert ob8 > ob7
     assert list(sorted([ob5, ob6, ob7, ob8])) == [ob7, ob5, ob6, ob8]
 
-    ob9 = OrderBookEntry.from_order(Order(None, None, False, 1, 1))
-    ob10 = OrderBookEntry.from_order(Order(None, None, True, 1, 1))
+    sell_order = Order(None, None, False, 1, 1)
+    buy_order = Order(None, None, True, 1, 1)
+    ob9 = OrderBookEntry.from_order(sell_order)
+    ob10 = OrderBookEntry.from_order(buy_order)
 
     # check that ordering doesn't change if price is the same
     for same in ([ob9, ob4], [ob4, ob9], [ob10, ob8], [ob8, ob10]):
         assert list(sorted(same)) == same, f"Ordering changed for {same}!"
+
+    # also check comparison with plain orders
+    assert ob2 > sell_order
+    assert ob6 < buy_order
 
 
 def test_order_book_entry_simple():
