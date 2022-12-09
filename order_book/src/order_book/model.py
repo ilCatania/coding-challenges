@@ -121,6 +121,34 @@ class OrderBookEntry:
         """Iterate over open orders."""
         return iter(self.open_orders)
 
+    def __cmp__(self, other) -> int:
+        """Provide ordering."""
+        if isinstance(other, OrderBookEntry) and self.is_buy == other.is_buy:
+            if self.price == other.price:
+                return 0
+            if self.is_buy:
+                return 1 if self.price < other.price else -1
+            else:  # sell
+                return -1 if self.price < other.price else 1
+        else:
+            return NotImplemented
+
+    def __gt__(self, other) -> bool:
+        """Provide ordering."""
+        return self.__cmp__(other) > 0
+
+    def __ge__(self, other) -> bool:
+        """Provide ordering."""
+        return self.__cmp__(other) >= 0
+
+    def __lt__(self, other) -> bool:
+        """Provide ordering."""
+        return self.__cmp__(other) < 0
+
+    def __le__(self, other) -> bool:
+        """Provide ordering."""
+        return self.__cmp__(other) <= 0
+
     def append(self, o: OrderFill):
         """Add an order to this entry."""
         if o.order.price == self.price and o.order.is_buy == self.is_buy:

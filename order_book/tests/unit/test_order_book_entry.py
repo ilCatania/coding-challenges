@@ -43,6 +43,39 @@ def test_order_book_entry_magic_methods():
     assert next(it) == o2
 
 
+def test_order_book_entry_ordering():
+    """Test that ordering works for order book entries.
+
+    Ordering is descending wrt price for buy order entries, ascending for sell
+    order entries. This is so they can be matched in the correct order against
+    incoming orders.
+    """
+    ob1 = OrderBookEntry(price=3, is_buy=False)
+    ob2 = OrderBookEntry(price=2, is_buy=False)
+    ob3 = OrderBookEntry(price=4, is_buy=False)
+    ob4 = OrderBookEntry(price=1, is_buy=False)
+
+    assert ob1 > ob2
+    assert ob4 < ob3
+    assert list(sorted([ob1, ob2, ob3, ob4])) == [ob4, ob2, ob1, ob3]
+
+    ob5 = OrderBookEntry(price=3, is_buy=True)
+    ob6 = OrderBookEntry(price=2, is_buy=True)
+    ob7 = OrderBookEntry(price=4, is_buy=True)
+    ob8 = OrderBookEntry(price=1, is_buy=True)
+
+    assert ob5 < ob6
+    assert ob8 > ob7
+    assert list(sorted([ob5, ob6, ob7, ob8])) == [ob7, ob5, ob6, ob8]
+
+    ob9 = OrderBookEntry.from_order(Order(None, None, False, 1, 1))
+    ob10 = OrderBookEntry.from_order(Order(None, None, True, 1, 1))
+
+    # check that ordering doesn't change if price is the same
+    for same in ([ob9, ob4], [ob4, ob9], [ob10, ob8], [ob8, ob10]):
+        assert list(sorted(same)) == same, f"Ordering changed for {same}!"
+
+
 def test_order_book_entry_simple():
     """Simple test matching two opposite orders."""
     sell_order = Order(
