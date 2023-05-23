@@ -28,7 +28,7 @@ PyDispatcher==2.0.5
 pyOpenSSL==17.5.0
 pytz==2017.3
 queuelib==1.4.2
-requests==2.20.0
+requests==2.31.0
 Scrapy~=2.8.0
 service-identity==17.0.0
 six==1.11.0
